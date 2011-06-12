@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.fasterxml.jackson.datatype.hppc.HppcDatatypeModule;
+
 public abstract class BaseTest extends junit.framework.TestCase
 {
     protected BaseTest() { }
