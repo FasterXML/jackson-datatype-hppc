@@ -6,9 +6,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.fasterxml.jackson.datatype.hppc.HppcDatatypeModule;
 
-public abstract class BaseTest extends junit.framework.TestCase
+public abstract class HppcTestBase extends junit.framework.TestCase
 {
-    protected BaseTest() { }
+    protected HppcTestBase() { }
     
     protected ObjectMapper mapperWithModule()
     {
