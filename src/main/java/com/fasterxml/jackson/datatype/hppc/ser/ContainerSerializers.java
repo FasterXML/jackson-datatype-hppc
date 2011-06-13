@@ -1,9 +1,11 @@
 package com.fasterxml.jackson.datatype.hppc.ser;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.*;
+import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.*;
@@ -19,7 +21,9 @@ public class ContainerSerializers
                 new LongContainerSerializer(),
                 new CharContainerSerializer(),
                 new FloatContainerSerializer(),
-                new DoubleContainerSerializer()
+                new DoubleContainerSerializer(),
+                
+                new BitSetSerializer()
         };
 
     /**
@@ -43,39 +47,47 @@ public class ContainerSerializers
     /**********************************************************************
      */
 
+    /**
+     * Byte containers are handled similar to byte[], meaning that they are
+     * actually serialized as base64-encoded Strings by default
+     *<p>
+     * TODO: allow specifying other modes (serialize as array?)
+     */
     static class ByteContainerSerializer
         extends ContainerSerializerBase<ByteContainer>
     {
         ByteContainerSerializer() {
-            super(ByteContainer.class, "integer");
+            super(ByteContainer.class, "string"); // really, "binary", but...
+        }
+
+        @Override
+        public JsonNode getSchema(SerializerProvider provider, Type typeHint) {
+            return createSchemaNode("string", true);
         }
         
+        @Override
+        public void serialize(ByteContainer value, JsonGenerator jgen, SerializerProvider provider)
+            throws IOException, JsonGenerationException
+        {
+            serializeContents(value, jgen, provider);
+        }
+        
+        @Override
+        public void serializeWithType(ByteContainer value, JsonGenerator jgen, SerializerProvider provider,
+                TypeSerializer typeSer)
+            throws IOException, JsonGenerationException
+        {
+            // will be a JSON String, so can't use array prefix/suffix
+            typeSer.writeTypePrefixForScalar(value, jgen);
+            serializeContents(value, jgen, provider);
+            typeSer.writeTypeSuffixForScalar(value, jgen);
+        }
         @Override
         protected void serializeContents(final ByteContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
         {
-            if (value instanceof ByteIndexedContainer) {
-                ByteIndexedContainer list = (ByteIndexedContainer) value;
-                for (int i = 0, len = list.size(); i < len; ++i) {
-                    jgen.writeNumber(list.get(i));
-                }
-                return;
-            }
-            // doh. Can't throw checked exceptions through; hence need convoluted handling...
-            final ExceptionHolder holder = new ExceptionHolder();
-            value.forEach(new BytePredicate() {
-                @Override
-                public boolean apply(byte value) {
-                    try {
-                        jgen.writeNumber(value);
-                    } catch (IOException e) {
-                        holder.assignException(e);
-                        return false;
-                    }
-                    return true;
-                }
-            });
-            holder.throwHeld();
+            byte[] bytes = value.toArray();
+            jgen.writeBinary(bytes);
         }
     }
 
@@ -170,8 +182,14 @@ public class ContainerSerializers
             protected void serializeContents(final IntIndexedContainer value, final JsonGenerator jgen, SerializerProvider provider)
                    throws IOException, JsonGenerationException
             {
+                int[] array;
+                if (value instanceof IntArrayList) {
+                    array = ((IntArrayList) value).buffer;
+                } else {
+                    array = value.toArray();
+                }
                 for (int i = 0, len = value.size(); i < len; ++i) {
-                    jgen.writeNumber(value.get(i));
+                    jgen.writeNumber(array[i]);
                 }
                 return;
             }
@@ -192,8 +210,14 @@ public class ContainerSerializers
         {
             if (value instanceof LongIndexedContainer) {
                 LongIndexedContainer list = (LongIndexedContainer) value;
+                long[] array;
+                if (value instanceof LongArrayList) {
+                    array = ((LongArrayList) value).buffer;
+                } else {
+                    array = list.toArray();
+                }
                 for (int i = 0, len = list.size(); i < len; ++i) {
-                    jgen.writeNumber(list.get(i));
+                    jgen.writeNumber(array[i]);
                 }
                 return;
             }
@@ -230,43 +254,44 @@ public class ContainerSerializers
      * <li>Array that contains numbers that represent character codes</li>
      *</ul>
      *
-     * Let's start with second option; although first one may be the best
-     * choice eventually.
+     * Let's start with the first option
      */
     final static class CharContainerSerializer
         extends ContainerSerializerBase<CharContainer>
     {
         CharContainerSerializer() {
-            // no real 'char' type in JSON Schema; string seems better
             super(CharContainer.class, "string");
         }
-    
+
+        @Override
+        public JsonNode getSchema(SerializerProvider provider, Type typeHint) {
+            return createSchemaNode("string", true);
+        }
+        
+        @Override
+        public void serialize(CharContainer value, JsonGenerator jgen, SerializerProvider provider)
+            throws IOException, JsonGenerationException
+        {
+            serializeContents(value, jgen, provider);
+        }
+        
+        @Override
+        public void serializeWithType(CharContainer value, JsonGenerator jgen, SerializerProvider provider,
+                TypeSerializer typeSer)
+            throws IOException, JsonGenerationException
+        {
+            // will be a JSON String, so can't use array prefix/suffix
+            typeSer.writeTypePrefixForScalar(value, jgen);
+            serializeContents(value, jgen, provider);
+            typeSer.writeTypeSuffixForScalar(value, jgen);
+        }
+
         @Override
         protected void serializeContents(final CharContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
         {
-            if (value instanceof CharIndexedContainer) {
-                CharIndexedContainer list = (CharIndexedContainer) value;
-                for (int i = 0, len = list.size(); i < len; ++i) {
-                    jgen.writeString(String.valueOf(list.get(i)));
-                }
-                return;
-            }
-            // doh. Can't throw checked exceptions through; hence need convoluted handling...
-            final ExceptionHolder holder = new ExceptionHolder();
-            value.forEach(new CharPredicate() {
-                @Override
-                public boolean apply(char value) {
-                    try {
-                        jgen.writeString(String.valueOf(value));
-                    } catch (IOException e) {
-                        holder.assignException(e);
-                        return false;
-                    }
-                    return true;
-                }
-            });
-            holder.throwHeld();
+            char[] ch = value.toArray();
+            jgen.writeString(ch, 0, ch.length);
         }
     }
     
@@ -345,6 +370,39 @@ public class ContainerSerializers
                 }
             });
             holder.throwHeld();
+        }
+    }
+
+    /*
+    /**********************************************************************
+    /* Concrete container implementations, other
+    /**********************************************************************
+     */
+
+    /**
+     * The default implementation is not particularly efficient, as it outputs
+     * things as an arrays of boolean values. There are many ways to achieve
+     * more efficient storage; either by outputting ints/longs, or by using
+     * base64 encoding. But for now this will work functionally correctly,
+     * and we can optimize better later on, as need be.
+     */
+    final static class BitSetSerializer
+        extends ContainerSerializerBase<BitSet>
+    {
+        BitSetSerializer() {
+            super(BitSet.class, "boolean");
+        }
+
+        @Override
+        protected void serializeContents(final BitSet value, final JsonGenerator jgen, SerializerProvider provider)
+               throws IOException, JsonGenerationException
+        {
+            // is size() close enough to the last set bit?
+            if (!value.isEmpty()) {
+                for (int i = 0, len = (int) value.size(); i < len; ++i) {
+                    jgen.writeBoolean(value.get(i));
+                }
+            }
         }
     }
 }

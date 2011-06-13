@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.datatype.hppc.deser;
 
 import java.io.IOException;
+import java.util.*;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.*;
@@ -11,15 +12,41 @@ import com.carrotsearch.hppc.*;
 public class ContainerDeserializers
 {
     /**
+     * We can either register abstract type defaults via ObjectMapper, or
+     * just do it here. For now let's just do it locally; this will allow
+     * override of definitions by app code (by using ObjectMapper resolution)
+     */
+    protected final static HashMap<Class<?>, Class<?>> _concreteMapping =
+        new HashMap<Class<?>, Class<?>>();
+    static {
+        // int:
+        _concreteMapping.put(IntContainer.class, IntArrayList.class);
+        _concreteMapping.put(IntIndexedContainer.class, IntArrayList.class);
+        _concreteMapping.put(IntSet.class, IntOpenHashSet.class);
+        _concreteMapping.put(IntDeque.class, IntArrayDeque.class);
+    }
+    
+    /**
      * Method called to see if this serializer (or a serializer this serializer
      * knows) should be used for given type; if not, null is returned.
      */
     public static JsonDeserializer<?> findDeserializer(DeserializationConfig config,
-            JavaType type)
+            final JavaType origType)
+        throws JsonMappingException
     {
+        JavaType type = origType;
         Class<?> raw = type.getRawClass();
         
         if (IntContainer.class.isAssignableFrom(raw)) {
+            // maybe we have mapping from abstract to concrete type?
+            if (type.isAbstract()) {
+                Class<?> concrete = _concreteMapping.get(raw);
+                if (concrete != null) {
+                    type = type.forcedNarrowBy(concrete);
+                    raw = concrete;
+                }
+            }
+            
             if (IntIndexedContainer.class.isAssignableFrom(raw)) {
                 return new IntIndexedContainerDeserializer(type, config);
             }
@@ -29,6 +56,20 @@ public class ContainerDeserializers
             if (IntDeque.class.isAssignableFrom(raw)) {
                 return new IntDequeDeserializer(type, config);
             }
+            // how about this? should we signal an error?
+            throw new JsonMappingException("Unrecognized HPPC IntContainer type: "+origType);
+        } else if (LongContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
+        } else if (FloatContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
+        } else if (DoubleContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
+        } else if (ByteContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
+        } else if (ShortContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
+        } else if (CharContainer.class.isAssignableFrom(raw)) {
+            // !!! TBI
         }
         return null;
     }        

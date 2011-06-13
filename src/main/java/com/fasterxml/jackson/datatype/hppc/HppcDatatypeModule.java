@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.type.*;
 import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.ObjectContainer;
+import com.fasterxml.jackson.datatype.hppc.deser.ContainerDeserializers;
 import com.fasterxml.jackson.datatype.hppc.ser.*;
 
 public class HppcDatatypeModule extends SimpleModule
@@ -102,19 +103,19 @@ public class HppcDatatypeModule extends SimpleModule
 
     static class HppcDeserializers extends Deserializers.None
     {
-/*
         @Override
-        public JsonDeserializer<?> findBeanDeserializer(JavaType arg0,
-                DeserializationConfig arg1, DeserializerProvider arg2,
-                BeanDescription arg3, BeanProperty arg4)
-                throws JsonMappingException {
-            // TODO Auto-generated method stub
-            return null;
+        public JsonDeserializer<?> findBeanDeserializer(JavaType type,
+                DeserializationConfig config, DeserializerProvider prov,
+                BeanDescription beanDesc, BeanProperty property)
+            throws JsonMappingException
+        {
+            return ContainerDeserializers.findDeserializer(config, type);
         }
 
+        /*
         @Override
         public JsonDeserializer<?> findCollectionLikeDeserializer(
-                CollectionLikeType arg0, DeserializationConfig arg1,
+                CollectionLikeType type, DeserializationConfig config,
                 DeserializerProvider arg2, BeanDescription arg3,
                 BeanProperty arg4, TypeDeserializer arg5,
                 JsonDeserializer<?> arg6) throws JsonMappingException {
@@ -123,8 +124,8 @@ public class HppcDatatypeModule extends SimpleModule
         }
 
         @Override
-        public JsonDeserializer<?> findMapLikeDeserializer(MapLikeType arg0,
-                DeserializationConfig arg1, DeserializerProvider arg2,
+        public JsonDeserializer<?> findMapLikeDeserializer(MapLikeType type,
+                DeserializationConfig config, DeserializerProvider arg2,
                 BeanDescription arg3, BeanProperty arg4, KeyDeserializer arg5,
                 TypeDeserializer arg6, JsonDeserializer<?> arg7)
                 throws JsonMappingException {

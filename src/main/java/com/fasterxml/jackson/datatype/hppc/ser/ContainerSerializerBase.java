@@ -38,7 +38,7 @@ public abstract class ContainerSerializerBase<T>
     }
     
     @Override
-    public final void serialize(T value, JsonGenerator jgen, SerializerProvider provider)
+    public void serialize(T value, JsonGenerator jgen, SerializerProvider provider)
         throws IOException, JsonGenerationException
     {
         jgen.writeStartArray();
@@ -47,7 +47,7 @@ public abstract class ContainerSerializerBase<T>
     }
     
     @Override
-    public final void serializeWithType(T value, JsonGenerator jgen, SerializerProvider provider,
+    public void serializeWithType(T value, JsonGenerator jgen, SerializerProvider provider,
             TypeSerializer typeSer)
         throws IOException, JsonGenerationException
     {
@@ -56,7 +56,6 @@ public abstract class ContainerSerializerBase<T>
         typeSer.writeTypeSuffixForArray(value, jgen);
     }
 
-    // most 
     @Override
     public JsonNode getSchema(SerializerProvider provider, Type typeHint)
     {
