@@ -158,6 +158,8 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
 </Private-Package>
               <Export-Package>
 com.fasterxml.jackson.datatype.hppc
+,com.fasterxml.jackson.datatype.hppc.deser
+,com.fasterxml.jackson.datatype.hppc.ser
 </Export-Package>
             </instructions>
           </configuration>
