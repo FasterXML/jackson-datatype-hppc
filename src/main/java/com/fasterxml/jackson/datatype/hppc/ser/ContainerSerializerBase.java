@@ -3,11 +3,8 @@ package com.fasterxml.jackson.datatype.hppc.ser;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.TypeSerializer;
+import org.codehaus.jackson.*;
+import org.codehaus.jackson.map.*;
 import org.codehaus.jackson.map.ser.SerializerBase;
 import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.JavaType;
@@ -32,12 +29,12 @@ public abstract class ContainerSerializerBase<T>
         _schemeElementType = schemaElementType;
     }
 
-    public boolean handles(JavaType type)
+    public JsonSerializer<?> getSerializer(JavaType type)
     {
         if (_handledType.isAssignableFrom(type.getRawClass())) {
-            return true;
+            return this;
         }
-        return false;
+        return null;
     }
     
     @Override

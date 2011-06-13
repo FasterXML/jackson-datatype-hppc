@@ -4,15 +4,15 @@ import java.io.IOException;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.*;
+import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.predicates.*;
 
 public class ContainerSerializers
 {
-    public static ContainerSerializerBase<?>[] getAllPrimitiveContainerSerializers()
-    {
-        return new ContainerSerializerBase<?>[] {
+    public final static ContainerSerializerBase<?>[] _primitiveSerializers =
+        new ContainerSerializerBase<?>[] {
                 new ByteContainerSerializer(),
                 new ShortContainerSerializer(),
                 new IntContainerSerializer(),
@@ -21,7 +21,21 @@ public class ContainerSerializers
                 new FloatContainerSerializer(),
                 new DoubleContainerSerializer()
         };
-    }
+
+    /**
+     * Method called to see if this serializer (or a serializer this serializer
+     * knows) should be used for given type; if not, null is returned.
+     */
+    public static JsonSerializer<?> getMatchingSerializer(JavaType type)
+    {
+        for (ContainerSerializerBase<?> ser : _primitiveSerializers) {
+            JsonSerializer<?> actual = ser.getSerializer(type);
+            if (actual != null) {
+                return actual;
+            }
+        }
+        return null;
+    }        
     
     /*
     /**********************************************************************
@@ -29,13 +43,13 @@ public class ContainerSerializers
     /**********************************************************************
      */
 
-    final static class ByteContainerSerializer
+    static class ByteContainerSerializer
         extends ContainerSerializerBase<ByteContainer>
     {
         ByteContainerSerializer() {
             super(ByteContainer.class, "integer");
         }
-
+        
         @Override
         protected void serializeContents(final ByteContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
@@ -100,24 +114,34 @@ public class ContainerSerializers
         }
     }
 
-    final static class IntContainerSerializer
+    /**
+     * Handler for HPPC containers that store int values.
+     * Specific in that we actually implement separate optimal serializer
+     * for indexed type, given how common this type is.
+     */
+    static class IntContainerSerializer
         extends ContainerSerializerBase<IntContainer>
     {
         IntContainerSerializer() {
             super(IntContainer.class, "integer");
         }
-    
+
+        // Overridden to allow use of more optimized serialized for indexed variant
+        public JsonSerializer<?> getSerializer(JavaType type)
+        {
+            JsonSerializer<?> ser = super.getSerializer(type);
+            if (ser != null) {
+                if (IntIndexedContainer.class.isAssignableFrom(type.getClass())) {
+                    return new Indexed();
+                }
+            }
+            return ser;
+        }
+        
         @Override
         protected void serializeContents(final IntContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
         {
-            if (value instanceof IntIndexedContainer) {
-                IntIndexedContainer list = (IntIndexedContainer) value;
-                for (int i = 0, len = list.size(); i < len; ++i) {
-                    jgen.writeNumber(list.get(i));
-                }
-                return;
-            }
             // doh. Can't throw checked exceptions through; hence need convoluted handling...
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new IntPredicate() {
@@ -134,6 +158,25 @@ public class ContainerSerializers
             });
             holder.throwHeld();
         }
+
+        // Specialized variant to support indexed int container with more efficient accessor
+        static class Indexed extends ContainerSerializerBase<IntIndexedContainer>
+        {
+            Indexed() {
+                super(IntIndexedContainer.class, "integer");
+            }
+
+            @Override
+            protected void serializeContents(final IntIndexedContainer value, final JsonGenerator jgen, SerializerProvider provider)
+                   throws IOException, JsonGenerationException
+            {
+                for (int i = 0, len = value.size(); i < len; ++i) {
+                    jgen.writeNumber(value.get(i));
+                }
+                return;
+            }
+        }
+        
     }
 
     final static class LongContainerSerializer

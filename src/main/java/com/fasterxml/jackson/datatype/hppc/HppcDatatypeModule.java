@@ -28,7 +28,7 @@ public class HppcDatatypeModule extends SimpleModule
         // must add a "type modifier", to recognize HPPC collection/map types
         context.addTypeModifier(new HppcTypeModifier());
         context.addDeserializers(new HppcDeserializers());
-        context.addSerializers(new HppcSerializers(ContainerSerializers.getAllPrimitiveContainerSerializers()));
+        context.addSerializers(new HppcSerializers());
     }
 
     /*
@@ -59,12 +59,7 @@ public class HppcDatatypeModule extends SimpleModule
     
     static class HppcSerializers extends Serializers.None
     {
-        protected final ContainerSerializerBase<?>[] _primitiveSerializers;
-        
-        public HppcSerializers(ContainerSerializerBase<?>[] prim)
-        {
-            _primitiveSerializers = prim;
-        }
+        public HppcSerializers() { }
         
         /* We add definitions of some Object-valued collections as Collection-like,
          * so that we get proper handling of various collection-bound
@@ -100,12 +95,7 @@ public class HppcDatatypeModule extends SimpleModule
         public JsonSerializer<?> findSerializer(SerializationConfig config,
                 JavaType type, BeanDescription beanDesc, BeanProperty property)
         {
-            for (ContainerSerializerBase<?> ser : _primitiveSerializers) {
-                if (ser.handles(type)) {
-                    return ser;
-                }
-            }
-            return null;
+            return ContainerSerializers.getMatchingSerializer(type);
         }
         
     }
