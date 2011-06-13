@@ -5,13 +5,12 @@ import java.lang.reflect.Type;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.node.ObjectNode;
 import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.predicates.*;
 
-public class ContainerSerializers
+public class HppcContainerSerializers
 {
     public final static ContainerSerializerBase<?>[] _primitiveSerializers =
         new ContainerSerializerBase<?>[] {

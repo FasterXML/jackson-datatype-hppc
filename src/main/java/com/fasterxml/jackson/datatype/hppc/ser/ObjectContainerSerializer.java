@@ -4,50 +4,63 @@ import java.io.IOException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.SerializerProvider;
+import org.codehaus.jackson.map.*;
+import org.codehaus.jackson.map.TypeSerializer;
+import org.codehaus.jackson.map.ser.impl.ObjectArraySerializer;
 import org.codehaus.jackson.map.type.CollectionLikeType;
 
-import com.carrotsearch.hppc.ObjectContainer;
-import com.carrotsearch.hppc.ObjectIndexedContainer;
-import com.carrotsearch.hppc.predicates.ObjectPredicate;
+import com.carrotsearch.hppc.*;
 
+/**
+ * Note: this implementation does not yet properly handle all
+ * polymorphic cases
+ */
 public class ObjectContainerSerializer
     extends ContainerSerializerBase<ObjectContainer<?>>
+    implements ResolvableSerializer
 {
-    public ObjectContainerSerializer(CollectionLikeType containerType) {
+    /**
+     * We will basically just delegate serialization to the standard
+     * Object[] serializer; as we can not sub-class it.
+     */
+    protected final ObjectArraySerializer _delegate;
+
+    public ObjectContainerSerializer(CollectionLikeType containerType,
+            ObjectArraySerializer delegate)
+    {
         // not sure if we can claim it is "object"... could be String, wrapper types etc:
         super(containerType, "any");
+        _delegate = delegate;
     }
 
-    // !!! TODO: implement properly...
+    @Override
+    public void serialize(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider)
+        throws IOException, JsonGenerationException
+    {
+        _delegate.serialize(value.toArray(), jgen, provider);
+    }
     
     @Override
-    protected void serializeContents(final ObjectContainer<?> value, final JsonGenerator jgen, SerializerProvider provider)
-           throws IOException, JsonGenerationException
+    public void serializeWithType(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider,
+            TypeSerializer typeSer)
+        throws IOException, JsonGenerationException
     {
-        /*
-        if (value instanceof ObjectIndexedContainer<?>) {
-            ObjectIndexedContainer<?> list = (ObjectIndexedContainer<?>) value;
-            for (int i = 0, len = list.size(); i < len; ++i) {
-                jgen.writeNumber(list.get(i));
-            }
-            return;
-        }
-        // doh. Can't throw checked exceptions through; hence need convoluted handling...
-        final ExceptionHolder holder = new ExceptionHolder();
-        value.forEach(new ObjectPredicate<?>() {
-            @Override
-            public boolean apply(Object value) {
-                try {
-                    jgen.writeNumber(value);
-                } catch (IOException e) {
-                    holder.assignException(e);
-                    return false;
-                }
-                return true;
-            }
-        });
-        holder.throwHeld();
-        */
+        _delegate.serializeWithType(value.toArray(), jgen, provider, typeSer);
     }
+
+    protected void serializeContents(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider)
+        throws IOException, JsonGenerationException {
+        throw new IllegalStateException();
+    }
+    
+    /**
+     * Need to get callback to resolve value serializer, if static typing
+     * is used (either being forced, or because value type is final)
+     */
+    public void resolve(SerializerProvider provider)
+        throws JsonMappingException
+    {
+        _delegate.resolve(provider);
+    }        
+
 }

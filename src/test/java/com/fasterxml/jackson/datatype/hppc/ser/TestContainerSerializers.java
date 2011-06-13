@@ -120,6 +120,26 @@ public class TestContainerSerializers extends HppcTestBase
             fail("Incorrect serialization: "+str);
         }
     }
+
+    /*
+    /**********************************************************************
+    /* Tests for non-numeric containers
+    /**********************************************************************
+     */
+
+    public void testObjectContainerSerializer() throws Exception
+    {
+        ObjectMapper mapper = mapperWithModule();
+        // first, untyped case
+        ObjectArrayList<Object> list = new ObjectArrayList<Object>();
+        list.add("foo");
+        list.add(Integer.valueOf(3));
+        list.add((Object) null);
+
+        assertEquals("[\"foo\",3,null]", mapper.writeValueAsString(list));
+
+        // TODO: polymorphic case (@JsonTypeInfo and/or default typing)
+    }
     
     public void testBitSetSerializer() throws Exception
     {

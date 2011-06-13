@@ -5,11 +5,12 @@ import java.lang.reflect.Type;
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.map.*;
 import org.codehaus.jackson.map.module.SimpleModule;
+import org.codehaus.jackson.map.ser.impl.ObjectArraySerializer;
 import org.codehaus.jackson.map.type.*;
 import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.ObjectContainer;
-import com.fasterxml.jackson.datatype.hppc.deser.ContainerDeserializers;
+import com.fasterxml.jackson.datatype.hppc.deser.HppcContainerDeserializers;
 import com.fasterxml.jackson.datatype.hppc.ser.*;
 
 public class HppcDatatypeModule extends SimpleModule
@@ -69,11 +70,15 @@ public class HppcDatatypeModule extends SimpleModule
         @Override
         public JsonSerializer<?> findCollectionLikeSerializer(
                 SerializationConfig config, CollectionLikeType containerType,
-                BeanDescription arg2, BeanProperty arg3, TypeSerializer arg4,
-                JsonSerializer<Object> arg5)
+                BeanDescription arg2, BeanProperty property, TypeSerializer elementTypeSerializer,
+                JsonSerializer<Object> elementValueSerializer)
         {
             if (ObjectContainer.class.isAssignableFrom(containerType.getRawClass())) {
-                return new ObjectContainerSerializer(containerType);
+                // hmmh. not sure if we can find 'forceStaticTyping' anywhere...
+                boolean staticTyping = config.isEnabled(SerializationConfig.Feature.USE_STATIC_TYPING);
+                ObjectArraySerializer ser = new ObjectArraySerializer(containerType.getContentType(),
+                        staticTyping, elementTypeSerializer, property, elementValueSerializer);
+                return new ObjectContainerSerializer(containerType, ser);
             }
             return null;
         }
@@ -96,7 +101,7 @@ public class HppcDatatypeModule extends SimpleModule
         public JsonSerializer<?> findSerializer(SerializationConfig config,
                 JavaType type, BeanDescription beanDesc, BeanProperty property)
         {
-            return ContainerSerializers.getMatchingSerializer(type);
+            return HppcContainerSerializers.getMatchingSerializer(type);
         }
         
     }
@@ -109,7 +114,7 @@ public class HppcDatatypeModule extends SimpleModule
                 BeanDescription beanDesc, BeanProperty property)
             throws JsonMappingException
         {
-            return ContainerDeserializers.findDeserializer(config, type);
+            return HppcContainerDeserializers.findDeserializer(config, type);
         }
 
         /*

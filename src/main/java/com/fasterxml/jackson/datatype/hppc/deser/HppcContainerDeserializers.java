@@ -9,7 +9,7 @@ import org.codehaus.jackson.type.JavaType;
 
 import com.carrotsearch.hppc.*;
 
-public class ContainerDeserializers
+public class HppcContainerDeserializers
 {
     /**
      * We can either register abstract type defaults via ObjectMapper, or
