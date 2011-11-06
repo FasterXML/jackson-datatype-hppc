@@ -5,7 +5,7 @@
     <artifactId>oss-parent</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.fasterxml</groupId>
+  <groupId>com.fasterxml.jackson</groupId>
   <artifactId>jackson-datatype-hppc</artifactId>
   <name>Jackson-datatype-HPPC</name>
   <version>0.5.0-SNAPSHOT</version>
@@ -150,9 +150,12 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
 ,org.codehaus.jackson, org.codehaus.jackson.annotate, org.codehaus.jackson.format, org.codehaus.jackson.impl
 ,org.codehaus.jackson.io ,org.codehaus.jackson.type, org.codehaus.jackson.util
 ,org.codehaus.jackson.map, org.codehaus.jackson.map.introspect, org.codehaus.jackson.map.module
-,org.codehaus.jackson.map.jsontype, org.codehaus.jackson.map.jsontype.impl
+,org.codehaus.jackson.map.deser
+,org.codehaus.jackson.map.jsontype,
 ,org.codehaus.jackson.map.ser, org.codehaus.jackson.map.ser.impl
 ,org.codehaus.jackson.map.type, org.codehaus.jackson.map.util
+,org.codehaus.jackson.node
+,com.carrotsearch.hppc, com.carrotsearch.hppc.predicates
 </Import-Package>
               <Private-Package>
 </Private-Package>
