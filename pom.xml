@@ -144,7 +144,7 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
           <extensions>true</extensions>
           <configuration>
             <instructions>
-              <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+              <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
               <Bundle-Vendor>fasterml.com</Bundle-Vendor>
               <Import-Package>
 ,org.codehaus.jackson, org.codehaus.jackson.annotate, org.codehaus.jackson.format, org.codehaus.jackson.impl
