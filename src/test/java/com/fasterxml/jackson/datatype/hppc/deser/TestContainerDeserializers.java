@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.datatype.hppc.deser;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Assert;
 

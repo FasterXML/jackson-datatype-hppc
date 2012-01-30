@@ -1,8 +1,9 @@
 package com.fasterxml.jackson.datatype.hppc.ser;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.carrotsearch.hppc.*;
+
 import com.fasterxml.jackson.datatype.hppc.HppcTestBase;
 
 public class TestContainerSerializers extends HppcTestBase

@@ -5,10 +5,10 @@
     <artifactId>oss-parent</artifactId>
     <version>5</version>
   </parent>
-  <groupId>com.fasterxml.jackson</groupId>
+  <groupId>com.fasterxml.jackson.datatype</groupId>
   <artifactId>jackson-datatype-hppc</artifactId>
   <name>Jackson-datatype-HPPC</name>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>2.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <description>Add-on module for Jackson (http://jackson.codehaus.org) to support
 High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/hppc.html) data types.
@@ -49,20 +49,21 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
 
   <dependencies>
     <dependency><!-- add core, not just mapper, to try to enforce compatible versions-->
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-core-asl</artifactId>
-      <version>1.8.1</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.8.1</version>
+    <dependency><!-- add core, not just mapper, to try to enforce compatible versions-->
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
+
     <!-- And obviously also depend on HPPC -->
     <dependency>
       <groupId>com.carrotsearch</groupId>
       <artifactId>hppc</artifactId>
-      <version>0.4.0</version>
+      <version>0.4.1</version>
     </dependency>
 
      <!--  Test Dependencies -->
@@ -73,20 +74,17 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
       <version>4.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!--  Sjsxp (from JDK 1.6) mostly works, but simpler with Woodstox -->
-    <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>woodstox-core-asl</artifactId>
-      <version>4.1.0</version>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>  
+    </resources>
     <plugins>
       <plugin>
-        <!-- Let's require JDK 1.6; makes things easier wrt Stax API for one 
-          -->
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.6</source>
@@ -141,20 +139,19 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.3.6</version>
           <extensions>true</extensions>
           <configuration>
             <instructions>
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
               <Bundle-Vendor>fasterml.com</Bundle-Vendor>
               <Import-Package>
-,org.codehaus.jackson, org.codehaus.jackson.annotate, org.codehaus.jackson.format, org.codehaus.jackson.impl
-,org.codehaus.jackson.io ,org.codehaus.jackson.type, org.codehaus.jackson.util
-,org.codehaus.jackson.map, org.codehaus.jackson.map.introspect, org.codehaus.jackson.map.module
-,org.codehaus.jackson.map.deser
-,org.codehaus.jackson.map.jsontype,
-,org.codehaus.jackson.map.ser, org.codehaus.jackson.map.ser.impl
-,org.codehaus.jackson.map.type, org.codehaus.jackson.map.util
-,org.codehaus.jackson.node
+com.fasterml.jackson.core,
+,com.fasterml.jackson.databind
+,com.fasterml.jackson.databind.node
+,com.fasterml.jackson.databind.ser
+,com.fasterml.jackson.databind.type
+,com.fasterml.jackson.databind.util
 ,com.carrotsearch.hppc, com.carrotsearch.hppc.predicates
 </Import-Package>
               <Private-Package>

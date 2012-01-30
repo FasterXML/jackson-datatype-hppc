@@ -3,9 +3,9 @@ package com.fasterxml.jackson.datatype.hppc.deser;
 import java.io.IOException;
 import java.util.*;
 
-import org.codehaus.jackson.*;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
 
 import com.carrotsearch.hppc.*;
 

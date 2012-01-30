@@ -3,9 +3,10 @@ package com.fasterxml.jackson.datatype.hppc.ser;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import org.codehaus.jackson.*;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
 
 import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.predicates.*;

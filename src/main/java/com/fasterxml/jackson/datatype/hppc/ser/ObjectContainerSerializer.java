@@ -2,12 +2,13 @@ package com.fasterxml.jackson.datatype.hppc.ser;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.map.TypeSerializer;
-import org.codehaus.jackson.map.ser.impl.ObjectArraySerializer;
-import org.codehaus.jackson.map.type.CollectionLikeType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.ser.ResolvableSerializer;
+import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
+import com.fasterxml.jackson.databind.type.*;
 
 import com.carrotsearch.hppc.*;
 

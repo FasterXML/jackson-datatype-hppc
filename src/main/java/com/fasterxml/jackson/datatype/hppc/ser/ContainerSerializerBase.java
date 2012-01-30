@@ -3,17 +3,18 @@ package com.fasterxml.jackson.datatype.hppc.ser;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import org.codehaus.jackson.*;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.map.ser.SerializerBase;
-import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * Base class for various container (~= Collection) serializers.
  */
 public abstract class ContainerSerializerBase<T>
-    extends SerializerBase<T>
+    extends StdSerializer<T>
 {
     protected final String _schemeElementType;
     

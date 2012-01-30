@@ -2,25 +2,26 @@ package com.fasterxml.jackson.datatype.hppc;
 
 import java.lang.reflect.Type;
 
-import org.codehaus.jackson.*;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.map.module.SimpleModule;
-import org.codehaus.jackson.map.ser.impl.ObjectArraySerializer;
-import org.codehaus.jackson.map.type.*;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.cfg.MapperConfig;
+import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
+import com.fasterxml.jackson.databind.type.*;
 
 import com.carrotsearch.hppc.ObjectContainer;
 import com.fasterxml.jackson.datatype.hppc.deser.HppcContainerDeserializers;
 import com.fasterxml.jackson.datatype.hppc.ser.*;
 
-public class HppcDatatypeModule extends SimpleModule
+public class HppcModule extends SimpleModule
 {
-    // Should externalize this, but how? Pre-build filtering?
-    private final static Version VERSION = new Version(0, 1, 0, null); // 0.1.0
-
-    public HppcDatatypeModule()
+    public HppcModule()
     {
-        super("HppcDatatypeModule", VERSION);
+        super("HppcDatatypeModule", ModuleVersion.instance.version());
     }
     
     @Override
@@ -59,7 +60,7 @@ public class HppcDatatypeModule extends SimpleModule
         }
     }
     
-    static class HppcSerializers extends Serializers.None
+    static class HppcSerializers extends Serializers.Base
     {
         public HppcSerializers() { }
         
@@ -75,7 +76,7 @@ public class HppcDatatypeModule extends SimpleModule
         {
             if (ObjectContainer.class.isAssignableFrom(containerType.getRawClass())) {
                 // hmmh. not sure if we can find 'forceStaticTyping' anywhere...
-                boolean staticTyping = config.isEnabled(SerializationConfig.Feature.USE_STATIC_TYPING);
+                boolean staticTyping = config.isEnabled(MapperConfig.Feature.USE_STATIC_TYPING);
                 ObjectArraySerializer ser = new ObjectArraySerializer(containerType.getContentType(),
                         staticTyping, elementTypeSerializer, property, elementValueSerializer);
                 return new ObjectContainerSerializer(containerType, ser);
@@ -106,11 +107,11 @@ public class HppcDatatypeModule extends SimpleModule
         
     }
 
-    static class HppcDeserializers extends Deserializers.None
+    static class HppcDeserializers extends Deserializers.Base
     {
         @Override
         public JsonDeserializer<?> findBeanDeserializer(JavaType type,
-                DeserializationConfig config, DeserializerProvider prov,
+                DeserializationConfig config,
                 BeanDescription beanDesc, BeanProperty property)
             throws JsonMappingException
         {
@@ -121,7 +122,7 @@ public class HppcDatatypeModule extends SimpleModule
         @Override
         public JsonDeserializer<?> findCollectionLikeDeserializer(
                 CollectionLikeType type, DeserializationConfig config,
-                DeserializerProvider arg2, BeanDescription arg3,
+                 BeanDescription arg3,
                 BeanProperty arg4, TypeDeserializer arg5,
                 JsonDeserializer<?> arg6) throws JsonMappingException {
             // TODO Auto-generated method stub
@@ -130,7 +131,7 @@ public class HppcDatatypeModule extends SimpleModule
 
         @Override
         public JsonDeserializer<?> findMapLikeDeserializer(MapLikeType type,
-                DeserializationConfig config, DeserializerProvider arg2,
+                DeserializationConfig config,
                 BeanDescription arg3, BeanProperty arg4, KeyDeserializer arg5,
                 TypeDeserializer arg6, JsonDeserializer<?> arg7)
                 throws JsonMappingException {

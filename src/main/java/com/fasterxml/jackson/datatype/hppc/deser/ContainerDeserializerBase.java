@@ -3,11 +3,13 @@ package com.fasterxml.jackson.datatype.hppc.deser;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 
-import org.codehaus.jackson.*;
-import org.codehaus.jackson.map.*;
-import org.codehaus.jackson.map.deser.StdDeserializer;
-import org.codehaus.jackson.map.util.ClassUtil;
-import org.codehaus.jackson.type.JavaType;
+import com.fasterxml.jackson.core.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.cfg.MapperConfig;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
+import com.fasterxml.jackson.databind.util.ClassUtil;
 
 public abstract class ContainerDeserializerBase<T>
     extends StdDeserializer<T>
@@ -22,7 +24,7 @@ public abstract class ContainerDeserializerBase<T>
     protected ContainerDeserializerBase(JavaType type, DeserializationConfig config)
     {
         super(type);
-        boolean fixAccess = config.isEnabled(DeserializationConfig.Feature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+        boolean fixAccess = config.isEnabled(MapperConfig.Feature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         _defaultCtor = (Constructor<T>) ClassUtil.findConstructor(type.getRawClass(), fixAccess);
     }
 

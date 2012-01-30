@@ -2,9 +2,9 @@ package com.fasterxml.jackson.datatype.hppc;
 
 import java.util.Arrays;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.fasterxml.jackson.datatype.hppc.HppcDatatypeModule;
+import com.fasterxml.jackson.datatype.hppc.HppcModule;
 
 public abstract class HppcTestBase extends junit.framework.TestCase
 {
@@ -13,7 +13,7 @@ public abstract class HppcTestBase extends junit.framework.TestCase
     protected ObjectMapper mapperWithModule()
     {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new HppcDatatypeModule());
+        mapper.registerModule(new HppcModule());
         return mapper;
     }
 
