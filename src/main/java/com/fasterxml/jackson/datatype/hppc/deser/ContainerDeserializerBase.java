@@ -6,7 +6,6 @@ import java.lang.reflect.Constructor;
 import com.fasterxml.jackson.core.*;
 
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.cfg.MapperConfig;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.jsontype.TypeDeserializer;
 import com.fasterxml.jackson.databind.util.ClassUtil;
@@ -24,7 +23,7 @@ public abstract class ContainerDeserializerBase<T>
     protected ContainerDeserializerBase(JavaType type, DeserializationConfig config)
     {
         super(type);
-        boolean fixAccess = config.isEnabled(MapperConfig.Feature.CAN_OVERRIDE_ACCESS_MODIFIERS);
+        boolean fixAccess = config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS);
         _defaultCtor = (Constructor<T>) ClassUtil.findConstructor(type.getRawClass(), fixAccess);
     }
 
@@ -54,7 +53,7 @@ public abstract class ContainerDeserializerBase<T>
         throws IOException, JsonProcessingException
     {
         // default impl will just throw an exception; except if 'accept single as collection' is enabled...
-        if (ctxt.isEnabled(DeserializationConfig.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)) {
+        if (ctxt.isEnabled(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)) {
             T single = handleSingleAsArray(jp, ctxt, createContainerInstance(ctxt));
             if (single != null) {
                 return single;

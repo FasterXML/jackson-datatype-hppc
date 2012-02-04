@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.*;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.databind.ser.ResolvableSerializer;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.ObjectArraySerializer;
 import com.fasterxml.jackson.databind.type.*;
 
@@ -18,7 +18,7 @@ import com.carrotsearch.hppc.*;
  */
 public class ObjectContainerSerializer
     extends ContainerSerializerBase<ObjectContainer<?>>
-    implements ResolvableSerializer
+    implements ContextualSerializer
 {
     /**
      * We will basically just delegate serialization to the standard
@@ -58,10 +58,14 @@ public class ObjectContainerSerializer
      * Need to get callback to resolve value serializer, if static typing
      * is used (either being forced, or because value type is final)
      */
-    public void resolve(SerializerProvider provider)
+    public void resolve(SerializerProvider prov)
         throws JsonMappingException
     {
-        _delegate.resolve(provider);
-    }        
+    }
 
+    @Override
+    public JsonSerializer<?> createContextual(SerializerProvider prov,
+            BeanProperty property) throws JsonMappingException {
+        return _delegate.createContextual(prov, property);
+    }        
 }
