@@ -136,7 +136,6 @@ public class TestContainerSerializers extends HppcTestBase
         list.add("foo");
         list.add(Integer.valueOf(3));
         list.add((Object) null);
-
         assertEquals("[\"foo\",3,null]", mapper.writeValueAsString(list));
 
         // TODO: polymorphic case (@JsonTypeInfo and/or default typing)

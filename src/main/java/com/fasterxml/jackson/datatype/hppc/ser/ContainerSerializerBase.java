@@ -30,6 +30,11 @@ public abstract class ContainerSerializerBase<T>
         _schemeElementType = schemaElementType;
     }
 
+    protected ContainerSerializerBase(ContainerSerializerBase<?> src) {
+        super(src._handledType, true);
+        _schemeElementType = src._schemeElementType;
+    }
+    
     public JsonSerializer<?> getSerializer(JavaType type)
     {
         if (_handledType.isAssignableFrom(type.getRawClass())) {

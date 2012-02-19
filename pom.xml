@@ -148,12 +148,18 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
               <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
               <Bundle-Vendor>fasterml.com</Bundle-Vendor>
               <Import-Package>
-com.fasterml.jackson.core,
-,com.fasterml.jackson.databind
-,com.fasterml.jackson.databind.node
-,com.fasterml.jackson.databind.ser
-,com.fasterml.jackson.databind.type
-,com.fasterml.jackson.databind.util
+com.fasterxml.jackson.core
+,com.fasterxml.jackson.core.util
+,com.fasterxml.jackson.databind
+,com.fasterxml.jackson.databind.deser
+,com.fasterxml.jackson.databind.deser.std
+,com.fasterxml.jackson.databind.jsontype
+,com.fasterxml.jackson.databind.module
+,com.fasterxml.jackson.databind.node
+,com.fasterxml.jackson.databind.ser
+,com.fasterxml.jackson.databind.ser.std
+,com.fasterxml.jackson.databind.type
+,com.fasterxml.jackson.databind.util
 ,com.carrotsearch.hppc, com.carrotsearch.hppc.predicates
 </Import-Package>
               <Private-Package>

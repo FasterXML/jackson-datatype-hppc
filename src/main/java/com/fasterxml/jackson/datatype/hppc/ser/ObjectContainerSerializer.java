@@ -26,6 +26,12 @@ public class ObjectContainerSerializer
      */
     protected final ObjectArraySerializer _delegate;
 
+    /*
+    /**********************************************************************
+    /* Life-cycle
+    /**********************************************************************
+     */
+    
     public ObjectContainerSerializer(CollectionLikeType containerType,
             ObjectArraySerializer delegate)
     {
@@ -34,6 +40,23 @@ public class ObjectContainerSerializer
         _delegate = delegate;
     }
 
+    protected ObjectContainerSerializer(ObjectContainerSerializer base,
+            ObjectArraySerializer delegate)
+    {
+        super(base);
+        _delegate = delegate;
+    }
+    
+    protected JsonSerializer<?> withDelegate(ObjectArraySerializer newDelegate) {
+        return (newDelegate == _delegate) ? this : new ObjectContainerSerializer(this, newDelegate);
+    }
+
+    /*
+    /**********************************************************************
+    /* Serialization
+    /**********************************************************************
+     */
+    
     @Override
     public void serialize(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider)
         throws IOException, JsonGenerationException
@@ -53,19 +76,10 @@ public class ObjectContainerSerializer
         throws IOException, JsonGenerationException {
         throw new IllegalStateException();
     }
-    
-    /**
-     * Need to get callback to resolve value serializer, if static typing
-     * is used (either being forced, or because value type is final)
-     */
-    public void resolve(SerializerProvider prov)
-        throws JsonMappingException
-    {
-    }
 
     @Override
     public JsonSerializer<?> createContextual(SerializerProvider prov,
             BeanProperty property) throws JsonMappingException {
-        return _delegate.createContextual(prov, property);
+        return withDelegate((ObjectArraySerializer) _delegate.createContextual(prov, property));
     }        
 }
