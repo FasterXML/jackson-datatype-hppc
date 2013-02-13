@@ -19,11 +19,13 @@ plan is to support full fidelity of Jackson annotation configurability; meaning 
 
 To use module on Maven-based projects, use following dependency:
 
-    <dependency>
-      <groupId>com.fasterxml.jackson</groupId>
-      <artifactId>jackson-datatype-hppc</artifactId>
-      <version>0.5.0</version>
-    </dependency>
+```xml
+<dependency>
+  <groupId>com.fasterxml.jackson</groupId>
+  <artifactId>jackson-datatype-hppc</artifactId>
+  <version>0.5.0</version>
+</dependency>
+```
 
 (or whatever version is most up-to-date at the moment)
 
@@ -32,7 +34,9 @@ To use module on Maven-based projects, use following dependency:
 To use the the Module in Jackson, simply register it with the ObjectMapper instance:
 Modules are registered through ObjectMapper, like so:
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.register(new HppcModule());
+```java
+ObjectMapper mapper = new ObjectMapper();
+mapper.register(new HppcModule());
+```
 
 after which you can read JSON as HPCC types, as well as write HPPC types as JSON. It's really that simple; convenient and efficient.
