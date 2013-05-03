@@ -84,6 +84,7 @@ public class HppcContainerDeserializers
      * Intermediate base class used for various integral (as opposed to
      * floating point) value container types.
      */
+    @SuppressWarnings("serial")
     static abstract class IntContainerDeserializerBase<T>
         extends ContainerDeserializerBase<T>
     {
@@ -91,7 +92,8 @@ public class HppcContainerDeserializers
         {
             super(type, config);
         }
-        
+
+        @Override
         public void deserializeContents(JsonParser jp, DeserializationContext ctxt,
                 T container)
             throws IOException, JsonProcessingException
@@ -126,11 +128,14 @@ public class HppcContainerDeserializers
     
     static class IntSetDeserializer extends IntContainerDeserializerBase<IntSet>
     {
+        private static final long serialVersionUID = 1L;
+
         public IntSetDeserializer(JavaType type, DeserializationConfig config)
         {
             super(type, config);
         }
 
+        @Override
         protected void add(IntSet container, int value) {
             container.add(value);
         }
@@ -138,11 +143,14 @@ public class HppcContainerDeserializers
 
     static class IntIndexedContainerDeserializer extends IntContainerDeserializerBase<IntIndexedContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         public IntIndexedContainerDeserializer(JavaType type, DeserializationConfig config)
         {
             super(type, config);
         }
 
+        @Override
         protected void add(IntIndexedContainer container, int value) {
             container.add(value);
         }
@@ -150,11 +158,14 @@ public class HppcContainerDeserializers
     
     static class IntDequeDeserializer extends IntContainerDeserializerBase<IntDeque>
     {
+        private static final long serialVersionUID = 1L;
+
         public IntDequeDeserializer(JavaType type, DeserializationConfig config)
         {
             super(type, config);
         }
 
+        @Override
         protected void add(IntDeque container, int value) {
             container.addLast(value);
         }

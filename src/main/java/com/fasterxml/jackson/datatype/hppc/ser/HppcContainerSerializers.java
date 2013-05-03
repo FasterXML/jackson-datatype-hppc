@@ -139,6 +139,7 @@ public class HppcContainerSerializers
         }
 
         // Overridden to allow use of more optimized serialized for indexed variant
+        @Override
         public JsonSerializer<?> getSerializer(JavaType type)
         {
             JsonSerializer<?> ser = super.getSerializer(type);
