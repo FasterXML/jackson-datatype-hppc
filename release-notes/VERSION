@@ -1,11 +1,15 @@
 Project: jackson-datatype-hppc
-Version: 2.2.0 (02-May-2013)
+Version: 2.2.1 (04-May-2013)
 
-New minor version, no functional changes.
+No functional changes.
 
 ------------------------------------------------------------------------
 === History: ===
 ------------------------------------------------------------------------
+
+2.2.0 (02-May-2013)
+
+No functional changes.
 
 2.1.5 (02-May-2013)
 2.1.2 (08-Dec-2012)
