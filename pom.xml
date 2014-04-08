@@ -45,7 +45,7 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
     <dependency>
       <groupId>com.carrotsearch</groupId>
       <artifactId>hppc</artifactId>
-      <version>0.4.2</version>
+      <version>0.4.3</version>
     </dependency>
 
      <!--  Test Dependencies -->
