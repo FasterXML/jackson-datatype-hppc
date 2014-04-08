@@ -1,11 +1,15 @@
 Project: jackson-datatype-hppc
-Version: 2.3.3 (xx-xxx-2014)
+Version: 2.4.0 (xx-xxx-2014)
 
-- Update hppc dependency to 0.4.3 (from 0.4.2): bigger change for 2.4.
+- Update hppc dependency to 0.6.0.
 
 ------------------------------------------------------------------------
 === History: ===
 ------------------------------------------------------------------------
+
+2.3.3 (xx-xxx-2014)
+
+- Update hppc dependency to 0.4.3 (from 0.4.2): bigger change for 2.4.
 
 2.3.2 (01-Mar-2014)
 
