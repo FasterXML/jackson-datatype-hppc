@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.datatype.hppc.deser;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Assert;
@@ -18,7 +20,10 @@ public class TestContainerDeserializers extends HppcTestBase
         IntArrayList array = mapper.readValue("[1,-3]", IntArrayList.class);
         Assert.assertArrayEquals(new int[] { 1, -3 }, array.toArray());
         IntOpenHashSet set = mapper.readValue("[-1234,0]", IntOpenHashSet.class);
-        Assert.assertArrayEquals(new int[] { -1234, 0 }, set.toArray());
+
+        // 08-Apr-2014, tatu: Order indeterminate actually, has change between 0.4 and 0.5
+        _assertSets(new int[] { -1234, 0 }, set.toArray());
+
         IntArrayDeque dq = mapper.readValue("[0,13]", IntArrayDeque.class);
         Assert.assertArrayEquals(new int[] { -0, 13 }, dq.toArray());
 
@@ -26,9 +31,21 @@ public class TestContainerDeserializers extends HppcTestBase
         IntIndexedContainer array2 = mapper.readValue("[1,-3]", IntIndexedContainer.class);
         Assert.assertArrayEquals(new int[] { 1, -3 }, array2.toArray());
         IntSet set2 = mapper.readValue("[-1234,0]", IntSet.class);
-        Assert.assertArrayEquals(new int[] { -1234, 0 }, set2.toArray());
+        _assertSets(new int[] { -1234, 0 }, set2.toArray());
         IntDeque dq2 = mapper.readValue("[0,13]", IntDeque.class);
         Assert.assertArrayEquals(new int[] { -0, 13 }, dq2.toArray());
     }
 
+    private void _assertSets(int[] exp, int[] actual)
+    {
+        assertEquals(exp.length, actual.length);
+
+        int[] exp2 = Arrays.copyOf(exp, exp.length);
+        int[] act2 = Arrays.copyOf(actual, actual.length);
+
+        Arrays.sort(exp2);
+        Arrays.sort(act2);
+
+        Assert.assertArrayEquals(exp2, act2);
+    }
 }

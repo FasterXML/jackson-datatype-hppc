@@ -24,8 +24,12 @@ public class TestContainerSerializers extends HppcTestBase
         ByteOpenHashSet set = new ByteOpenHashSet();
         set.add(new byte[] { (byte) 1, (byte) 2});
         String str = mapper.writeValueAsString(set);
-        // hmmh. order of set is indetermined, so this may not be stable...
-        assertEquals("\"AgE=\"", str);
+        // hmmh. order of set is indeterminate, so need to compare two possibilities
+        final String OK1 = "\"AgE=\"";
+        final String OK2 = "\"AQI=\"";
+        if (!(str.equals(OK1) || str.equals(OK2))) {
+            fail("Should have gotten either '"+OK1+"' or '"+OK2+"', instead got '"+str+"'");
+        }
     }
 
     public void testShortSerializer() throws Exception
