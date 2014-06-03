@@ -2,7 +2,7 @@ Project to build Jackson (http://jackson.codehaus.org) module (jar) to support J
 
 ## Status
 
-Currently (Nov 2011) following things are supported:
+Currently (2.4.0) following things are supported:
 
 * Serializing all 'XxxContainer' (IntContainer, IntSet, IntArrayList etc) types
 
@@ -23,7 +23,7 @@ To use module on Maven-based projects, use following dependency:
 <dependency>
   <groupId>com.fasterxml.jackson</groupId>
   <artifactId>jackson-datatype-hppc</artifactId>
-  <version>0.5.0</version>
+  <version>2.4.0</version>
 </dependency>
 ```
 
