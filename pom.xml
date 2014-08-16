@@ -21,7 +21,7 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
     <tag>HEAD</tag>
   </scm>
   <properties>
-    <version.jackson.core>2.4.1</version.jackson.core>
+    <version.jackson.core>2.4.2</version.jackson.core>
     <!-- Generate PackageVersion.java into this directory. -->
     <packageVersion.dir>com/fasterxml/jackson/datatype/hppc</packageVersion.dir>
     <packageVersion.package>${project.groupId}.hppc</packageVersion.package>
