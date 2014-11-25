@@ -8,7 +8,7 @@
   <groupId>com.fasterxml.jackson.datatype</groupId>
   <artifactId>jackson-datatype-hppc</artifactId>
   <name>Jackson-datatype-HPPC</name>
-  <version>2.4.4-SNAPSHOT</version>
+  <version>2.4.4</version>
   <packaging>bundle</packaging>
   <description>Add-on module for Jackson (http://jackson.codehaus.org) to support
 High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/hppc.html) data types.
@@ -18,7 +18,7 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
     <connection>scm:git:git@github.com:FasterXML/jackson-datatype-hppc.git</connection>
     <developerConnection>scm:git:git@github.com:FasterXML/jackson-datatype-hppc.git</developerConnection>
     <url>http://github.com/FasterXML/jackson-datatype-hppc</url>    
-    <tag>HEAD</tag>
+    <tag>jackson-datatype-hppc-2.4.4</tag>
   </scm>
   <properties>
     <version.jackson.core>2.4.4</version.jackson.core>
