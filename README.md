@@ -2,6 +2,8 @@ Project to build Jackson (http://jackson.codehaus.org) module (jar) to support J
 
 ## Status
 
+[![Build Status](https://travis-ci.org/FasterXML/jackson-datatype-hppc.svg)](https://travis-ci.org/FasterXML/jackson-datatype-hppc)
+
 Currently (2.4.0) following things are supported:
 
 * Serializing all 'XxxContainer' (IntContainer, IntSet, IntArrayList etc) types
