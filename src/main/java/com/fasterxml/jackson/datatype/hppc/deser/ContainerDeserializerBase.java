@@ -69,7 +69,7 @@ public abstract class ContainerDeserializerBase<T>
         try {
             return _defaultCtor.newInstance();
         } catch (Exception e) {
-            throw ctxt.instantiationException(getValueClass(), e);
+            throw ctxt.instantiationException(handledType(), e);
         }
     }
     

@@ -19,7 +19,7 @@ public class TestContainerDeserializers extends HppcTestBase
         // first, direct
         IntArrayList array = mapper.readValue("[1,-3]", IntArrayList.class);
         Assert.assertArrayEquals(new int[] { 1, -3 }, array.toArray());
-        IntOpenHashSet set = mapper.readValue("[-1234,0]", IntOpenHashSet.class);
+        IntHashSet set = mapper.readValue("[-1234,0]", IntHashSet.class);
 
         // 08-Apr-2014, tatu: Order indeterminate actually, has change between 0.4 and 0.5
         _assertSets(new int[] { -1234, 0 }, set.toArray());

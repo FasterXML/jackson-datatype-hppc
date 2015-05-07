@@ -56,6 +56,8 @@ public class HppcContainerSerializers
     static class ByteContainerSerializer
         extends ContainerSerializerBase<ByteContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         ByteContainerSerializer() {
             super(ByteContainer.class, "string"); // really, "binary", but...
         }
@@ -94,6 +96,8 @@ public class HppcContainerSerializers
     final static class ShortContainerSerializer
         extends ContainerSerializerBase<ShortContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         ShortContainerSerializer() {
             super(ShortContainer.class, "integer");
         }
@@ -134,6 +138,8 @@ public class HppcContainerSerializers
     static class IntContainerSerializer
         extends ContainerSerializerBase<IntContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         IntContainerSerializer() {
             super(IntContainer.class, "integer");
         }
@@ -175,6 +181,8 @@ public class HppcContainerSerializers
         // Specialized variant to support indexed int container with more efficient accessor
         static class Indexed extends ContainerSerializerBase<IntIndexedContainer>
         {
+            private static final long serialVersionUID = 1L;
+
             Indexed() {
                 super(IntIndexedContainer.class, "integer");
             }
@@ -201,6 +209,8 @@ public class HppcContainerSerializers
     final static class LongContainerSerializer
         extends ContainerSerializerBase<LongContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         LongContainerSerializer() {
             super(LongContainer.class, "integer");
         }
@@ -260,6 +270,8 @@ public class HppcContainerSerializers
     final static class CharContainerSerializer
         extends ContainerSerializerBase<CharContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         CharContainerSerializer() {
             super(CharContainer.class, "string");
         }
@@ -305,6 +317,8 @@ public class HppcContainerSerializers
     final static class FloatContainerSerializer
         extends ContainerSerializerBase<FloatContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         FloatContainerSerializer() {
             super(FloatContainer.class, "number");
         }
@@ -341,6 +355,8 @@ public class HppcContainerSerializers
     final static class DoubleContainerSerializer
         extends ContainerSerializerBase<DoubleContainer>
     {
+        private static final long serialVersionUID = 1L;
+
         DoubleContainerSerializer() {
             super(DoubleContainer.class, "number");
         }
@@ -390,18 +406,20 @@ public class HppcContainerSerializers
     final static class BitSetSerializer
         extends ContainerSerializerBase<BitSet>
     {
+        private static final long serialVersionUID = 1L;
+
         BitSetSerializer() {
             super(BitSet.class, "boolean");
         }
 
         @Override
-        protected void serializeContents(final BitSet value, final JsonGenerator jgen, SerializerProvider provider)
+        protected void serializeContents(final BitSet value, final JsonGenerator gen, SerializerProvider provider)
                throws IOException, JsonGenerationException
         {
             // is size() close enough to the last set bit?
             if (!value.isEmpty()) {
                 for (int i = 0, len = (int) value.size(); i < len; ++i) {
-                    jgen.writeBoolean(value.get(i));
+                    gen.writeBoolean(value.get(i));
                 }
             }
         }

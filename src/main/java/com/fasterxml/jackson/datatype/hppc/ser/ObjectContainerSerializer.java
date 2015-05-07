@@ -20,6 +20,8 @@ public class ObjectContainerSerializer
     extends ContainerSerializerBase<ObjectContainer<?>>
     implements ContextualSerializer
 {
+    private static final long serialVersionUID = 1L;
+
     /**
      * We will basically just delegate serialization to the standard
      * Object[] serializer; as we can not sub-class it.
@@ -58,22 +60,22 @@ public class ObjectContainerSerializer
      */
     
     @Override
-    public void serialize(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider)
-        throws IOException, JsonGenerationException
+    public void serialize(ObjectContainer<?> value, JsonGenerator gen, SerializerProvider provider)
+        throws IOException
     {
-        _delegate.serialize(value.toArray(), jgen, provider);
+        _delegate.serialize(value.toArray(), gen, provider);
     }
     
     @Override
-    public void serializeWithType(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider,
+    public void serializeWithType(ObjectContainer<?> value, JsonGenerator gen, SerializerProvider provider,
             TypeSerializer typeSer)
-        throws IOException, JsonGenerationException
+        throws IOException
     {
-        _delegate.serializeWithType(value.toArray(), jgen, provider, typeSer);
+        _delegate.serializeWithType(value.toArray(), gen, provider, typeSer);
     }
 
-    protected void serializeContents(ObjectContainer<?> value, JsonGenerator jgen, SerializerProvider provider)
-        throws IOException, JsonGenerationException {
+    protected void serializeContents(ObjectContainer<?> value, JsonGenerator gen, SerializerProvider provider)
+        throws IOException {
         throw new IllegalStateException();
     }
 

@@ -4,6 +4,12 @@ Project: jackson-datatype-hppc
 === Releases ===
 ------------------------------------------------------------------------
 
+2.6.0 (not yet released)
+
+- Update hppc dependency to 0.7.1.
+  * NOTE! Due to HPPC API incompatibilities, this means that module can NOT
+    be used with HPPC versions earlier than 0.7.0.
+
 2.5.3 (24-Apr-2015)
 2.5.2 (29-Mar-2015)
 2.5.1 (06-Feb-2015)

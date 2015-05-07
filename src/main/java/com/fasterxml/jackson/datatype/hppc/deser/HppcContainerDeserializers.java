@@ -22,7 +22,12 @@ public class HppcContainerDeserializers
         // int:
         _concreteMapping.put(IntContainer.class, IntArrayList.class);
         _concreteMapping.put(IntIndexedContainer.class, IntArrayList.class);
-        _concreteMapping.put(IntSet.class, IntOpenHashSet.class);
+        /* 07-May-2015, tatu: 0.6 -> 0.7 changed names, to drop "Open" part.
+         *   Alas, this means that our module can't support pre-0.7 any more
+         *   starting with 2.6.
+         */
+//        _concreteMapping.put(IntSet.class, IntOpenHashSet.class); // for HPPC-0.6
+        _concreteMapping.put(IntSet.class, IntHashSet.class);
         _concreteMapping.put(IntDeque.class, IntArrayDeque.class);
     }
     

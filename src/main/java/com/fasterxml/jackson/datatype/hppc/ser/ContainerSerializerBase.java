@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 public abstract class ContainerSerializerBase<T>
     extends StdSerializer<T>
 {
+    private static final long serialVersionUID = 1L;
+
     protected final String _schemeElementType;
     
     protected ContainerSerializerBase(Class<T> type, String schemaElementType)
@@ -66,7 +68,7 @@ public abstract class ContainerSerializerBase<T>
     public JsonNode getSchema(SerializerProvider provider, Type typeHint)
     {
         ObjectNode o = createSchemaNode("array", true);
-        o.put("items", createSchemaNode(_schemeElementType));
+        o.set("items", createSchemaNode(_schemeElementType));
         return o;
     }
     
