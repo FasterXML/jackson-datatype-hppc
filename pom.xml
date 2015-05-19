@@ -22,6 +22,9 @@ High-Performance Primitive Collections (HPPC, see http://labs.carrotsearch.com/h
   </scm>
   <properties>
     <version.jackson.core>2.6.0-rc1</version.jackson.core>
+    <!-- Since HPPC now requires Java 7 -->
+    <javac.src.version>1.7</javac.src.version>
+    <javac.target.version>1.7</javac.target.version>
     <!-- Generate PackageVersion.java into this directory. -->
     <packageVersion.dir>com/fasterxml/jackson/datatype/hppc</packageVersion.dir>
     <packageVersion.package>${project.groupId}.hppc</packageVersion.package>

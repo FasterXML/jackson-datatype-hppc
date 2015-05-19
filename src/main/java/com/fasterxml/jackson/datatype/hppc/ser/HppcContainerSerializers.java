@@ -104,7 +104,7 @@ public class HppcContainerSerializers
     
         @Override
         protected void serializeContents(final ShortContainer value, final JsonGenerator jgen, SerializerProvider provider)
-               throws IOException, JsonGenerationException
+               throws IOException
         {
             if (value instanceof ShortIndexedContainer) {
                 ShortIndexedContainer list = (ShortIndexedContainer) value;
@@ -116,9 +116,9 @@ public class HppcContainerSerializers
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new ShortPredicate() {
                 @Override
-                public boolean apply(short value) {
+                public boolean apply(short v) {
                     try {
-                        jgen.writeNumber(value);
+                        jgen.writeNumber(v);
                     } catch (IOException e) {
                         holder.assignException(e);
                         return false;
@@ -165,9 +165,9 @@ public class HppcContainerSerializers
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new IntPredicate() {
                 @Override
-                public boolean apply(int value) {
+                public boolean apply(int v) {
                     try {
-                        jgen.writeNumber(value);
+                        jgen.writeNumber(v);
                     } catch (IOException e) {
                         holder.assignException(e);
                         return false;
@@ -236,9 +236,9 @@ public class HppcContainerSerializers
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new LongPredicate() {
                 @Override
-                public boolean apply(long value) {
+                public boolean apply(long v) {
                     try {
-                        jgen.writeNumber(value);
+                        jgen.writeNumber(v);
                     } catch (IOException e) {
                         holder.assignException(e);
                         return false;
@@ -338,9 +338,9 @@ public class HppcContainerSerializers
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new FloatPredicate() {
                 @Override
-                public boolean apply(float value) {
+                public boolean apply(float v) {
                     try {
-                        jgen.writeNumber(value);
+                        jgen.writeNumber(v);
                     } catch (IOException e) {
                         holder.assignException(e);
                         return false;
@@ -376,9 +376,9 @@ public class HppcContainerSerializers
             final ExceptionHolder holder = new ExceptionHolder();
             value.forEach(new DoublePredicate() {
                 @Override
-                public boolean apply(double value) {
+                public boolean apply(double v) {
                     try {
-                        jgen.writeNumber(value);
+                        jgen.writeNumber(v);
                     } catch (IOException e) {
                         holder.assignException(e);
                         return false;

@@ -94,7 +94,7 @@ public class TestContainerSerializers extends HppcTestBase
         CharHashSet set = new CharHashSet();
         set.addAll('d','e');
         String str = mapper.writeValueAsString(set);
-        if (!"[\"de\"]".equals(str) && !"\"ed\"".equals(str)) {
+        if (!"\"de\"".equals(str) && !"\"ed\"".equals(str)) {
             fail("Incorrect serialization: "+str);
         }
     }

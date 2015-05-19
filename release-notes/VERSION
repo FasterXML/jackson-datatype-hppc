@@ -9,6 +9,7 @@ Project: jackson-datatype-hppc
 - Update hppc dependency to 0.7.1.
   * NOTE! Due to HPPC API incompatibilities, this means that module can NOT
     be used with HPPC versions earlier than 0.7.0.
+- JDK baseline now 1.7, as per HPPC baseline
 
 2.5.3 (24-Apr-2015)
 2.5.2 (29-Mar-2015)
