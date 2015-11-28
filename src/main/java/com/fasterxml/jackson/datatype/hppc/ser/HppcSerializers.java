@@ -49,7 +49,7 @@ public class HppcSerializers extends Serializers.Base
     public JsonSerializer<?> findSerializer(SerializationConfig config,
             JavaType type, BeanDescription beanDesc)
     {
-        return HppcContainerSerializers.getMatchingSerializer(type);
+        return HppcContainerSerializers.getMatchingSerializer(config, type);
     }
     
 }

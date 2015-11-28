@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import com.fasterxml.jackson.core.*;
-
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper;
 import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-
 import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.predicates.*;
 
@@ -30,7 +31,8 @@ public class HppcContainerSerializers
      * Method called to see if this serializer (or a serializer this serializer
      * knows) should be used for given type; if not, null is returned.
      */
-    public static JsonSerializer<?> getMatchingSerializer(JavaType type)
+    public static JsonSerializer<?> getMatchingSerializer(SerializationConfig config,
+            JavaType type)
     {
         for (ContainerSerializerBase<?> ser : _primitiveSerializers) {
             JsonSerializer<?> actual = ser.getSerializer(type);
@@ -40,7 +42,7 @@ public class HppcContainerSerializers
         }
         return null;
     }        
-    
+
     /*
     /**********************************************************************
     /* Concrete container implementations; basic integral types
@@ -66,10 +68,26 @@ public class HppcContainerSerializers
         public JsonNode getSchema(SerializerProvider provider, Type typeHint) {
             return createSchemaNode("string", true);
         }
-        
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint) throws JsonMappingException {
+            // Logical content byte array/stream, but physically a JSON String so:
+            if (visitor != null) visitor.expectStringFormat(typeHint);
+        }
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, ByteContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(ByteContainer value) {
+            return value.size() == 1;
+        }
+
         @Override
         public void serialize(ByteContainer value, JsonGenerator jgen, SerializerProvider provider)
-            throws IOException, JsonGenerationException
+            throws IOException
         {
             serializeContents(value, jgen, provider);
         }
@@ -77,7 +95,7 @@ public class HppcContainerSerializers
         @Override
         public void serializeWithType(ByteContainer value, JsonGenerator jgen, SerializerProvider provider,
                 TypeSerializer typeSer)
-            throws IOException, JsonGenerationException
+            throws IOException
         {
             // will be a JSON String, so can't use array prefix/suffix
             typeSer.writeTypePrefixForScalar(value, jgen);
@@ -101,7 +119,29 @@ public class HppcContainerSerializers
         ShortContainerSerializer() {
             super(ShortContainer.class, "integer");
         }
-    
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, ShortContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(ShortContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+                throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.INTEGER);
+                }
+            }
+        }
+
         @Override
         protected void serializeContents(final ShortContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException
@@ -156,7 +196,29 @@ public class HppcContainerSerializers
             }
             return ser;
         }
-        
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, IntContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(IntContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+                throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.INTEGER);
+                }
+            }
+        }
+
         @Override
         protected void serializeContents(final IntContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
@@ -188,6 +250,28 @@ public class HppcContainerSerializers
             }
 
             @Override
+            public boolean isEmpty(SerializerProvider provider, IntIndexedContainer value) {
+                return value.isEmpty();
+            }
+
+            @Override
+            public boolean hasSingleElement(IntIndexedContainer value) {
+                return value.size() == 1;
+            }
+
+            @Override
+            public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+                    throws JsonMappingException
+            {
+                if (visitor != null) {
+                    JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                    if (v2 != null) {
+                        v2.itemsFormat(JsonFormatTypes.INTEGER);
+                    }
+                }
+            }
+            
+            @Override
             protected void serializeContents(final IntIndexedContainer value, final JsonGenerator jgen, SerializerProvider provider)
                    throws IOException, JsonGenerationException
             {
@@ -214,7 +298,29 @@ public class HppcContainerSerializers
         LongContainerSerializer() {
             super(LongContainer.class, "integer");
         }
-    
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, LongContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(LongContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+                throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.INTEGER);
+                }
+            }
+        }
+
         @Override
         protected void serializeContents(final LongContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
@@ -277,13 +383,25 @@ public class HppcContainerSerializers
         }
 
         @Override
-        public JsonNode getSchema(SerializerProvider provider, Type typeHint) {
-            return createSchemaNode("string", true);
+        public boolean isEmpty(SerializerProvider provider, CharContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(CharContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+            throws JsonMappingException {
+            // Logical content byte array/stream, but physically a JSON String so:
+            if (visitor != null) visitor.expectStringFormat(typeHint);
         }
         
         @Override
         public void serialize(CharContainer value, JsonGenerator jgen, SerializerProvider provider)
-            throws IOException, JsonGenerationException
+            throws IOException
         {
             serializeContents(value, jgen, provider);
         }
@@ -291,7 +409,7 @@ public class HppcContainerSerializers
         @Override
         public void serializeWithType(CharContainer value, JsonGenerator jgen, SerializerProvider provider,
                 TypeSerializer typeSer)
-            throws IOException, JsonGenerationException
+            throws IOException
         {
             // will be a JSON String, so can't use array prefix/suffix
             typeSer.writeTypePrefixForScalar(value, jgen);
@@ -322,7 +440,29 @@ public class HppcContainerSerializers
         FloatContainerSerializer() {
             super(FloatContainer.class, "number");
         }
-    
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, FloatContainer value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(FloatContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+            throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.NUMBER);
+                }
+            }
+        }
+
         @Override
         protected void serializeContents(final FloatContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
@@ -360,7 +500,28 @@ public class HppcContainerSerializers
         DoubleContainerSerializer() {
             super(DoubleContainer.class, "number");
         }
-    
+
+        @Override
+        public boolean isEmpty(SerializerProvider provider, DoubleContainer value) {
+            return value.isEmpty();
+        }
+        @Override
+        public boolean hasSingleElement(DoubleContainer value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+            throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.NUMBER);
+                }
+            }
+        }
+
         @Override
         protected void serializeContents(final DoubleContainer value, final JsonGenerator jgen, SerializerProvider provider)
                throws IOException, JsonGenerationException
@@ -413,8 +574,30 @@ public class HppcContainerSerializers
         }
 
         @Override
+        public boolean isEmpty(SerializerProvider provider, BitSet value) {
+            return value.isEmpty();
+        }
+
+        @Override
+        public boolean hasSingleElement(BitSet value) {
+            return value.size() == 1;
+        }
+
+        @Override
+        public void acceptJsonFormatVisitor(JsonFormatVisitorWrapper visitor, JavaType typeHint)
+                throws JsonMappingException
+        {
+            if (visitor != null) {
+                JsonArrayFormatVisitor v2 = visitor.expectArrayFormat(typeHint);
+                if (v2 != null) {
+                    v2.itemsFormat(JsonFormatTypes.BOOLEAN);
+                }
+            }
+        }
+        
+        @Override
         protected void serializeContents(final BitSet value, final JsonGenerator gen, SerializerProvider provider)
-               throws IOException, JsonGenerationException
+               throws IOException
         {
             // is size() close enough to the last set bit?
             if (!value.isEmpty()) {
