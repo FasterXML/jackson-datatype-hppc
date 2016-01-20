@@ -1,3 +1,10 @@
+**IMPORTANT!**
+
+This project will be moved under https://github.com/FasterXML/jackson-datatype-collections soon,
+to simplify management, release process.
+
+-----
+
 Project to build Jackson (http://jackson.codehaus.org) module (jar) to support JSON serialization and deserialization of High-Performance Primitive Collections (see http://labs.carrotsearch.com/hppc.html) datatypes.
 
 ## Status
